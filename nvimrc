@@ -24,7 +24,9 @@ Plugin 'vim-scripts/LanguageTool'
 Plugin 'sjl/gundo.vim'
 Plugin 'bling/vim-airline'
 Plugin 'airblade/vim-gitgutter'
-" All of your Plugins must be added before the following line
+Plugin 'tpope/vim-fugitive'
+Plugin 'rking/ag.vim'        " The Silver Searcher
+Plugin 'kien/ctrlp.vim'
 call vundle#end()            " required
 filetype plugin indent on    " required
 filetype plugin on
@@ -47,13 +49,16 @@ colorscheme hybrid
 highlight Comment cterm=italic
 "highlight Function cterm=italic ctermfg=77
 "highlight Namespace cterm=bold ctermfg=72
+highlight Namespace cterm=bold
 "highlight Number ctermfg=205
 "highlight String ctermfg=208
 "highlight GlobalVariable ctermfg=125 cterm=italic
+highlight GlobalVariable cterm=italic
 "highlight Member ctermfg=194
 ""highlight Operator ctermfg=51
 "highlight Type cterm=NONE ctermfg=81
 "highlight Statement cterm=bold ctermfg=81
+highlight Statement cterm=bold
 "highlight YcmWarningSection ctermfg=0 ctermbg=9
 "highlight YcmErrorSection ctermfg=0 ctermbg=1
 "highlight YcmWarningSign ctermbg=9
@@ -72,6 +77,16 @@ set wildmenu
 set wildmode=longest:full
 set textwidth=80
 set colorcolumn=81
+" Airline
+let g:airline#extensions#tabline#enabled = 1
+let g:airline_powerline_fonts = 1
+" vim-gitgutter
+let g:gitgutter_realtime = 1
+let g:gitgutter_eager = 1
+set updatetime=250
+" indentLine
+let g:indentLine_char = '┊'
+let g:indentLine_color_term = 252
 " }}}
 
 " Core {{{
@@ -85,6 +100,10 @@ set comments=sl:/*,mb:\ *,elx:\ */
 set ignorecase
 set incsearch
 set hlsearch
+set wildignore+=*/tmp/*,*.so,*.swp,*.pyc,*.o
+let g:ctrlp_custom_ignore = { 'dir':  '\v[\/]\.(git|hg|svn)$',
+                            \ 'file': '\v\.(pyc|o|swp)$' }
+let g:ctrlp_user_command = 'ag %s -l --nocolor -g ""'
 " }}}
 
 " Folding {{{
@@ -100,13 +119,13 @@ let mapleader=","
 nnoremap <leader><space> :nohlsearch<CR>
 nnoremap <leader>u :GundoToggle<CR>
 " Save session
-nnoremap <leader>s :mksession<CR>
+nnoremap <leader>s :mksession!<CR>
 " }}}
 
 " Fn and Alt {{{
 nmap <F2> :w<CR>
-nmap <F4> :ClangFormat<CR>
-imap <F4> <ESC>:ClangFormat<CR>imap <F2> <ESC>:w<CR>i
+nmap <F4> :ClangFormat<CR> zz
+imap <F4> <ESC>:ClangFormat<CR>imap <F2> <ESC>:w<CR>i zz
 map <F9> :YcmCompleter FixIt<CR>
 nnoremap <F10> :YcmForceCompileAndDiagnostics <CR>
 
@@ -158,19 +177,7 @@ endfunc
 nnoremap <C-m> :call NumberToggle()<cr>
 " }}}
 
-" Airline
-let g:airline#extensions#tabline#enabled = 1
-let g:airline_powerline_fonts = 1
-
-" vim-gitgutter
-let g:gitgutter_realtime = 1
-let g:gitgutter_eager = 1
-set updatetime=250
-
 " LanguageTool
 let g:languagetool_jar='/usr/share/java/languagetool/languagetool-commandline.jar'
-
-let g:indentLine_char = '┊'
-let g:indentLine_color_term = 252
 
 " vim:foldmethod=marker:foldlevel=0
